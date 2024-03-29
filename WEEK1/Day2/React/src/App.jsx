@@ -16,12 +16,7 @@ function App() {
 
     return (
         <div className="App">
-            {/* 목록 영역 */}
-            <ul className="todoItems">
-                {todos.map((item, index) => (
-                    <li key={index}>{item}</li>
-                ))}
-            </ul>
+            {/* 입력 영역 */}
             <div className="inputGroup">
                 <input
                     ref={inputRef}
@@ -35,6 +30,23 @@ function App() {
                     추가하기
                 </button>
             </div>
+            {/* 목록 영역 */}
+            <ul className="todoItems">
+                {todos.map((item, index) => (
+                    <div
+                        style={{
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            border: '1px solid black',
+                            padding: '20px 60px 20px 10px',
+                        }}
+                    >
+                        <li key={index}>{item}</li>
+                        <button style={{ position: 'absolute', right: '5px' }}>완료</button>
+                    </div>
+                ))}
+            </ul>
         </div>
     );
 }
