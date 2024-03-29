@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 입력 영역 -->
+    <div>
+        <input type="text" id="newItem" placeholder="새 목록 추가">
+        <button id="addButton">추가하기</button>
+    </div>
+    <!-- 목록 영역 -->
+    <div>
+        <ul id="listArea">
+            <li>React 공부하기</li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addButton = document.getElementById("addButton");
+            const listArea = document.getElementById("listArea");
+
+            addButton.addEventListener('click', () => {
+                const newItemInput = document.getElementById("newItem");
+                const newItemValue = newItemInput.value.trim();
+
+                if (newItemValue !== '') {
+                    const liTag = document.createElement('li');
+                    liTag.textContent = newItemValue;
+                    listArea.appendChild(liTag);
+                    newItemInput.value = ''; // 입력 필드 초기화
+                } else {
+                    alert("내용을 입력해주세요!");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
