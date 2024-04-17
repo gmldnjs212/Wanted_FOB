@@ -7,12 +7,14 @@ const List = () => {
   const [issues, setIssues] = useState([]);
   const [page, setPage] = useState(1); // 페이지 상태관리
   const perPage = 10; // 페이지당 보여줄 데이터 개수
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태관리
 
   useEffect(() => {
     const requestURL = `https://api.github.com/repos/angular/angular-cli/issues`;
 
     const requestIssues = async () => {
       try {
+        setIsLoading(true); // 데이터를 불러올 때 로딩 상태 설정
         const response = await Axios.get(requestURL, {
           params: {
             state: "open",
@@ -22,34 +24,47 @@ const List = () => {
             page: page,
           },
         });
-        console.log(response);
         setIssues((prevIssues) => [...prevIssues, ...response.data]);
+        setIsLoading(false); // 데이터 로딩 완료 후 상태 변경
       } catch (error) {
         console.error("Request Error >> ", error);
+        setIsLoading(false); // 에러 발생 시 로딩 상태 변경
       }
     };
     requestIssues();
   }, [page]);
 
-  const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
-
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const observerOptions = {
+      root: null, // viewport를 기준으로 intersection을 계산합니다.
+      rootMargin: "0px", // viewport에 대한 여백
+      threshold: 0, // 요소의 얼마나 보이는지를 나타내는 값 (0.0 ~ 1.0)
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          console.log(entry);
+          setPage((prevPage) => prevPage + 1);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const loadingElement = document.getElementById("observer");
+    if (loadingElement) {
+      observer.observe(loadingElement);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   return (
     <CardListArea>
       {issues.map((issue, index) => {
         if ((index + 1) % 5 === 0) {
-          // 5번째 마다 광고 출력
           return (
             <Card key={`AD-${index}`}>
               <ImgContainer href='https://www.wanted.co.kr/'>
@@ -58,7 +73,6 @@ const List = () => {
             </Card>
           );
         } else {
-          // 나머지는 이슈 출력
           return (
             <Card key={issue.id}>
               <CardHeader>
@@ -72,6 +86,8 @@ const List = () => {
           );
         }
       })}
+      {/* {isLoading && <p>Loading...</p>} */}
+      <div id='observer' style={{ height: "50px", marginTop: "20px" }}></div>
     </CardListArea>
   );
 };
@@ -82,13 +98,13 @@ const CardListArea = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 500px;
+  width: 600px;
   gap: 10px;
 `;
 
 const Card = styled.div`
   position: relative;
-  width: 400px;
+  width: 500px;
   padding: 5px;
   border-bottom: 2px black solid;
 `;
