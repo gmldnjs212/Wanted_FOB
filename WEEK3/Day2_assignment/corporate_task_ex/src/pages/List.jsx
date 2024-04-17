@@ -1,21 +1,33 @@
-import React from 'react';
 import styled from 'styled-components';
 import dummydatas from '../data/dummyData.json';
+import ADimg from '../assets/IMG_2126.jpg';
 
 const List = () => {
     return (
         <CardListArea>
-            {dummydatas.map((data) => (
-                <Card key={data.id}>
-                    <CardHeader>
-                        {data.id} {data.title}
-                    </CardHeader>
-                    <CardContent>
-                        {data.author} {data.date}
-                    </CardContent>
-                    <CardComment>코멘트 : {data.comments}</CardComment>
-                </Card>
-            ))}
+            {dummydatas.map((data) => {
+                if (data.id === 'AD') {
+                    return (
+                        <Card key={data.id}>
+                            <ImgContainer href="https://www.wanted.co.kr/">
+                                <Img src={ADimg} alt="ADimg" />
+                            </ImgContainer>
+                        </Card>
+                    );
+                } else {
+                    return (
+                        <Card key={data.id}>
+                            <CardHeader>
+                                {data.id} {data.title}
+                            </CardHeader>
+                            <CardContent>
+                                {data.author} {data.date}
+                            </CardContent>
+                            <CardComment>코멘트 : {data.comments}</CardComment>
+                        </Card>
+                    );
+                }
+            })}
         </CardListArea>
     );
 };
@@ -45,4 +57,12 @@ const CardComment = styled.div`
     position: absolute;
     right: 5px;
     top: 20px;
+`;
+const ImgContainer = styled.a`
+    width: inherit;
+    height: inherit;
+`;
+const Img = styled.img`
+    width: inherit;
+    height: inherit;
 `;

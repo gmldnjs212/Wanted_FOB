@@ -1,13 +1,16 @@
+import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from './components/common/Header';
-import List from './pages/List';
+import router from './router/router';
 
 function App() {
     return (
-        <Layout>
-            <Header />
-            <List />
-        </Layout>
+        <BrowserRouter>
+            <Layout>
+                <Header />
+                {router}
+            </Layout>
+        </BrowserRouter>
     );
 }
 
@@ -17,4 +20,5 @@ const Layout = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 30px;
 `;
